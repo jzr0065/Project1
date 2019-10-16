@@ -129,7 +129,8 @@ public class AddProductUI {
                 JOptionPane.showMessageDialog(null,
                         "Product is saved successfully!");
             else {
-                System.out.println(adapter.getErrorMessage());
+                JOptionPane.showMessageDialog(null,
+                        adapter.getErrorMessage(), "query failed",0);
             }
 
 

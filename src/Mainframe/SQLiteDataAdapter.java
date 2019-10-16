@@ -10,6 +10,7 @@ import java.sql.SQLException;
 public class SQLiteDataAdapter implements IDataAccess {
     Connection conn = null;
     int errorCode = 0;
+    String error_msg = null;
 
     public boolean connect(String path) {
         try {
@@ -52,9 +53,14 @@ public class SQLiteDataAdapter implements IDataAccess {
                     + ")";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            System.out.print(rs);
+            System.out.print("res:" + rs);
         }catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("error msg:" + e.getMessage());
+            if (e.getMessage() == "query does not return ResultSet"){
+                return true;
+            }
+            error_msg = e.getMessage();
+            return false;
         }
         return true;
     }
@@ -89,6 +95,31 @@ public class SQLiteDataAdapter implements IDataAccess {
             System.out.print(rs);
         }catch (Exception e) {
             System.out.println(e.getMessage());
+            if (e.getMessage() == "query does not return ResultSet"){
+                return true;
+            }
+            error_msg = e.getMessage();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean savePurchase(PurchaseModel purchase) {
+        try {
+            String sql = "INSERT INTO Orders(OrderID, CustomerID, ProductID, Price, Quantity, Tax, TotalCost, Date)" +
+                    "VALUES(" + purchase.mPurchaseID + "," + purchase.mCustomerID + "," + purchase.mProductID + "," + purchase.mPrice
+                    + "," + purchase.mQuantity + "," + purchase.mTax + "," + purchase.mTotalCost + ",'" + purchase.mDate + "')";
+            System.out.println(sql);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            System.out.print(rs);
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            if (e.getMessage() == "query does not return ResultSet"){
+                return true;
+            }
+            error_msg = e.getMessage();
+            return false;
         }
         return true;
     }
@@ -109,7 +140,7 @@ public class SQLiteDataAdapter implements IDataAccess {
             case CONNECTION_OPEN_FAILED: return "Connection is not opened!";
             case PRODUCT_LOAD_FAILED: return "Cannot load the product!";
         };
-        return "OK";
+        return error_msg;
     }
 
 }

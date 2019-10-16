@@ -6,6 +6,7 @@ import java.util.Map;
 public class CachedDataAdapter implements IDataAccess {
     Map<Integer, ProductModel> cachedProducts = new HashMap<>();
     Map<Integer, CustomerModel> cachedCustomers = new HashMap<>();
+    Map<Integer, PurchaseModel> cachedPurchases = new HashMap<>();
     IDataAccess adapter;
 
     public CachedDataAdapter(IDataAccess adapter) {
@@ -36,6 +37,12 @@ public class CachedDataAdapter implements IDataAccess {
         return true;
     }
 
+    public boolean savePurchase(PurchaseModel purchase){
+        adapter.savePurchase(purchase);
+        cachedPurchases.put(purchase.mPurchaseID, purchase);
+        return true;
+    }
+
     public CustomerModel loadCustomer(int id) {
         if (cachedProducts.containsKey(id))
             return cachedCustomers.get(id);
@@ -51,6 +58,7 @@ public class CachedDataAdapter implements IDataAccess {
         cachedCustomers.put(customer.mCustomerID, customer);
         return true;
     }
+
 
     @Override
     public boolean disconnect() {

@@ -68,6 +68,10 @@ public class AddPurchaseUI {
         pane.add(btnAdd); pane.add(btnCancel);
         view.getContentPane().add(pane);
 
+        btnCancel.addActionListener(
+                (actionEvent) -> view.dispose()
+        );
+
         txtCustomerID.addFocusListener(new CustomerNameLoader());
         txtProductID.addFocusListener(new ProductNameLoader());
         txtQuantity.addFocusListener(new CostCalculator());
@@ -78,17 +82,103 @@ public class AddPurchaseUI {
     class receipt implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            JOptionPane.showMessageDialog(view, "the purchase Date:" + txtPurchaseDate.getText() + "\n"
-                                                        + "the PurchaseID:" + txtPurchaseID.getText() + "\n"
-                                                        + "the CustomerID:" + txtCustomerID.getText() + "\n"
-                                                        + "the CustomerName:" + txtCustomerName.getText() + "\n"
-                                                        + "the ProductID:" + txtProductID.getText() + "\n"
-                                                        + "the ProductName:" + txtProductName.getText() +"\n"
-                                                        + "the Price:" + txtPrice.getText() + "\n"
-                                                        + "the Quantity:" + txtQuantity.getText() + "\n"
-                                                        + "the Cost:" + txtCost.getText() + "\n"
-                                                        + "the Tax:" + txtTax.getText() + "\n"
-                                                        + "the Total cost:" + txtTotalCost.getText() + "\n", "receipt", JOptionPane.PLAIN_MESSAGE);
+            IDataAccess adapter = StoreManager.getInstance().getDataAccess();
+            purchase = new PurchaseModel();
+
+            String s = txtPurchaseID.getText();
+            try {
+                purchase.mPurchaseID = Integer.parseInt(s);
+            }
+            catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null,
+                        "PurchaseID is INVALID (not a number)!!!");
+                return;
+            }
+
+            s = txtCustomerID.getText();
+            try {
+                purchase.mCustomerID = Integer.parseInt(s);
+            }
+            catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null,
+                        "CustomerID is INVALID (not a number)!!!");
+                return;
+            }
+
+            s = txtProductID.getText();
+            try {
+                purchase.mProductID = Integer.parseInt(s);
+            }
+            catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null,
+                        "ProductID is INVALID (not a number)!!!");
+                return;
+            }
+
+            s = txtPrice.getText();
+            try {
+                purchase.mPrice = Double.parseDouble(s);
+            }
+            catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null,
+                        "price is INVALID (not a number)!!!");
+                return;
+            }
+
+            s = txtQuantity.getText();
+            try {
+                purchase.mQuantity = Integer.parseInt(s);
+            }
+            catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null,
+                        "quantity is INVALID (not a number)!!!");
+                return;
+            }
+
+            s = txtTax.getText();
+            try {
+                purchase.mTax = Double.parseDouble(s);
+            }
+            catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null,
+                        "tax is INVALID (not a number)!!!");
+                return;
+            }
+
+            s = txtTotalCost.getText();
+            try {
+                purchase.mTotalCost = Double.parseDouble(s);
+            }
+            catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null,
+                        "totalcost is INVALID (not a number)!!!");
+                return;
+            }
+
+            s = txtPurchaseDate.getText();
+            purchase.mDate = s;
+
+
+            if (adapter.savePurchase(purchase)) {
+                JOptionPane.showMessageDialog(null,
+                        "Product is saved successfully!");
+                JOptionPane.showMessageDialog(view, "the purchase Date:" + txtPurchaseDate.getText() + "\n"
+                        + "the PurchaseID:" + txtPurchaseID.getText() + "\n"
+                        + "the CustomerID:" + txtCustomerID.getText() + "\n"
+                        + "the CustomerName:" + txtCustomerName.getText() + "\n"
+                        + "the ProductID:" + txtProductID.getText() + "\n"
+                        + "the ProductName:" + txtProductName.getText() +"\n"
+                        + "the Price:" + txtPrice.getText() + "\n"
+                        + "the Quantity:" + txtQuantity.getText() + "\n"
+                        + "the Cost:" + txtCost.getText() + "\n"
+                        + "the Tax:" + txtTax.getText() + "\n"
+                        + "the Total cost:" + txtTotalCost.getText() + "\n", "receipt", JOptionPane.PLAIN_MESSAGE);
+            }
+            else {
+                JOptionPane.showMessageDialog(null,
+                        adapter.getErrorMessage(), "query failed",0);
+            }
+
         }
     }
 

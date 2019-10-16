@@ -22,4 +22,7 @@ public interface IDataAccess {
     public CustomerModel loadCustomer(int id);
     public boolean saveCustomer(CustomerModel customer);
 
+//    public PurchaseModel loadPurchase(int id);
+    public boolean savePurchase(PurchaseModel purchase);
+
 }

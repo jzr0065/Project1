@@ -3,7 +3,7 @@ package Mainframe;
 import javax.swing.*;
 
 public class StoreManager {
-    public static String DEFAULT_DB_FILE = "./data/store.db";
+    public static String DEFAULT_DB_FILE = "./test/store.db";
     IDataAccess mAdapter;
     MainUI mMainUI;
 

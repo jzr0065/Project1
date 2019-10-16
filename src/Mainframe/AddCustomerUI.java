@@ -57,6 +57,69 @@ public class AddCustomerUI{
         btnCancel.addActionListener(
                 (actionEvent) -> view.dispose()
         );
+        btnAdd.addActionListener(new
+                AddButtonController());
 
+    }
+
+    class AddButtonController implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            CustomerModel customer = new CustomerModel();
+
+            String s = txtCustomerID.getText();
+
+            if (s.length() == 0) {
+                JOptionPane.showMessageDialog(null,
+                        "CustomerID could not be EMPTY!!!");
+                return;
+            }
+            try {
+                customer.mCustomerID = Integer.parseInt(s);
+            }
+            catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null,
+                        "CustomerID is INVALID (not a number)!!!");
+                return;
+            }
+
+            s = txtName.getText();
+            if (s.length() == 0) {
+                JOptionPane.showMessageDialog(null,
+                        "Customer Name could not be EMPTY!!!");
+                return;
+            }
+            customer.mName = s;
+
+            s = txtAddress.getText();
+            if (s.length() == 0) {
+                JOptionPane.showMessageDialog(null,
+                        "Address could not be EMPTY!!!");
+                return;
+            }
+
+            customer.mAddress = s;
+
+            s = phone.getText();
+            if (s.length() == 0) {
+                JOptionPane.showMessageDialog(null,
+                        "Phone could not be EMPTY!!!");
+                return;
+            }
+            customer.mPhone = s;
+
+            IDataAccess adapter = StoreManager.getInstance().getDataAccess();
+
+            if (adapter.saveCustomer(customer))
+                JOptionPane.showMessageDialog(null,
+                        "Customer is saved successfully!");
+            else {
+                JOptionPane.showMessageDialog(null,
+                        adapter.getErrorMessage(), "query failed",0);
+            }
+
+
+        }
     }
 }
