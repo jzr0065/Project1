@@ -161,7 +161,7 @@ public class AddPurchaseUI {
 
             if (adapter.savePurchase(purchase)) {
                 JOptionPane.showMessageDialog(null,
-                        "Product is saved successfully!");
+                        "Order is saved successfully!");
                 JOptionPane.showMessageDialog(view, "the purchase Date:" + txtPurchaseDate.getText() + "\n"
                         + "the PurchaseID:" + txtPurchaseID.getText() + "\n"
                         + "the CustomerID:" + txtCustomerID.getText() + "\n"
